@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for i in $(find output -name "*.pdf"); do
+    gdrive upload --name "$(basename $(dirname $i))-$(basename $i)" $i
+done

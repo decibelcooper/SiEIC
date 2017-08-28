@@ -1,0 +1,7 @@
+*.swp
+*.slcio
+*.log
+*.promc
+*.img
+.lcsim
+.oracle_jre_usage

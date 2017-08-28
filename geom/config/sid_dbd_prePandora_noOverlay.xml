@@ -1,0 +1,167 @@
+<lcsim xmlns:lcsim="http://www.lcsim.org/schemas/lcsim/1.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+	xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcsim/1.0/lcsim.xsd">
+	
+	<inputFiles>
+		<file>${inputFile}</file>
+	</inputFiles>
+	
+	<control>
+		<numberOfEvents>-1</numberOfEvents>
+		<verbose>false</verbose>
+		<printDriverStatistics>true</printDriverStatistics>
+		<printDriversDetailed>true</printDriversDetailed>
+	</control>
+	
+	<execute>
+		<driver name="EventMarkerDriver" />
+		<driver name="VertexBarrelSetup" />
+		<driver name="VertexEndcapSetup" />
+		<driver name="TrackerBarrelSetup" />
+		<driver name="TrackerEndcapSetup" />
+		<driver name="TrackerForwardSetup" />
+		<driver name="TrackerDigi" />
+		<driver name="VertexDigi" />
+		<driver name="HelicalTrackHitDriver" />
+		<driver name="TrackHitRemover" />
+		<driver name="SeedTracker" />
+		<driver name="TrackStateDriver" />
+		<driver name="TrackSubdetectorHitNumbers" />
+		<driver name="Writer" />
+	</execute>
+	
+	<drivers>
+		<!-- Feedback on loop progress -->
+		<driver name="EventMarkerDriver"
+		        type="org.lcsim.job.EventMarkerDriver">
+			<eventInterval>1</eventInterval>
+		</driver>
+		
+		<!-- Define tracker barrel sensor segmentation -->
+		<driver name="TrackerBarrelSetup"
+			    type="org.lcsim.recon.tracking.digitization.sisim.config.SiTrackerBarrelSensorSetup">
+			<subdetectorName>SiTrackerBarrel</subdetectorName>
+			<readoutElectrodesPitch>0.050</readoutElectrodesPitch>
+			<senseElectrodesPitch>0.025</senseElectrodesPitch>
+			<transferEfficiencies>0.986 0.419</transferEfficiencies>
+		</driver>
+		
+		<!-- Define tracker endcap sensor segmentation -->
+		<driver name="TrackerEndcapSetup"
+			    type="org.lcsim.recon.tracking.digitization.sisim.config.SiTrackerEndcap2SensorSetup">
+			<subdetectorName>SiTrackerEndcap</subdetectorName>
+			<readoutPitch>0.050</readoutPitch>
+			<sensePitch>0.025</sensePitch>
+			<transferEfficiencies>0.986 0.419</transferEfficiencies>
+		</driver>
+		
+		<!-- Define vertex barrel sensor segmentation -->
+		<driver name="VertexBarrelSetup"
+			    type="org.lcsim.recon.tracking.digitization.sisim.config.SiVertexBarrelSensorSetup">
+			<subdetectorName>SiVertexBarrel</subdetectorName>
+			<readoutPitchX>0.02</readoutPitchX>
+			<readoutPitchY>0.02</readoutPitchY>
+			<sensePitchX>0.02</sensePitchX>
+			<sensePitchY>0.02</sensePitchY>
+			<transferEfficiency>1.0</transferEfficiency>
+		</driver>
+		
+		<!-- Define vertex endcap sensor segmentation -->
+		<driver name="VertexEndcapSetup"
+			    type="org.lcsim.recon.tracking.digitization.sisim.config.SiVertexEndcapSensorSetup">
+			<subdetectorName>SiVertexEndcap</subdetectorName>
+			<readoutPitchX>0.02</readoutPitchX>
+			<readoutPitchY>0.02</readoutPitchY>
+			<sensePitchX>0.02</sensePitchX>
+			<sensePitchY>0.02</sensePitchY>
+			<transferEfficiency>1.0</transferEfficiency>
+		</driver>
+		
+		<!-- Define forward tracker sensor segmentation -->
+		<driver name="TrackerForwardSetup"
+			    type="org.lcsim.recon.tracking.digitization.sisim.config.SiVertexEndcapSensorSetup">
+			<subdetectorName>SiTrackerForward</subdetectorName>
+			<readoutPitchX>0.02</readoutPitchX>
+			<readoutPitchY>0.02</readoutPitchY>
+			<sensePitchX>0.02</sensePitchX>
+			<sensePitchY>0.02</sensePitchY>
+			<transferEfficiency>1.0</transferEfficiency>
+		</driver>
+		
+		<!-- Tracker hit digitization and clustering in strip detectors -->
+		<driver name="TrackerDigi"
+			    type="org.lcsim.recon.tracking.digitization.sisim.config.StripDigiSetupDriver">
+			<subdetectorNames>SiTrackerBarrel SiTrackerEndcap</subdetectorNames>
+			<rawHitsCollectionName>TKR_RawTrackerHits</rawHitsCollectionName>
+			<trackerHitsCollectionName>TKR_TrackerHits</trackerHitsCollectionName>
+			<maxClusterSize>10</maxClusterSize>
+			<noiseIntercept>0.</noiseIntercept>
+			<noiseSlope>0.</noiseSlope>
+			<noiseThreshold>6000.</noiseThreshold>
+			<readoutNeighborThreshold>6000.</readoutNeighborThreshold>
+			<seedThreshold>6000.</seedThreshold>
+			<neighborThreshold>6000.</neighborThreshold>
+			<centralStripAveragingThreshold>4</centralStripAveragingThreshold>
+			<oneClusterErr>0.288675135</oneClusterErr>
+			<twoClusterErr>0.2</twoClusterErr>
+			<threeClusterErr>0.333333333</threeClusterErr>
+			<fourClusterErr>0.5</fourClusterErr>
+			<fiveClusterErr>1.0</fiveClusterErr>
+		</driver>
+		
+		<!-- Tracker hit digitization and clustering in pixel detectors -->
+		<driver name="VertexDigi"
+			    type="org.lcsim.recon.tracking.digitization.sisim.config.PixelDigiSetupDriver">
+			<subdetectorNames>SiVertexBarrel SiVertexEndcap SiTrackerForward</subdetectorNames>
+			<rawHitsCollectionName>VXD_RawTrackerHits</rawHitsCollectionName>
+			<trackerHitsCollectionName>VXD_TrackerHits</trackerHitsCollectionName>
+			<maxClusterSize>10</maxClusterSize>
+			<noiseIntercept>0.</noiseIntercept>
+			<noiseSlope>0.</noiseSlope>
+			<noiseThreshold>100.</noiseThreshold>
+			<readoutNeighborThreshold>100.</readoutNeighborThreshold>
+			<seedThreshold>100.</seedThreshold>
+			<neighborThreshold>100.</neighborThreshold>
+			<oneClusterErr>0.288675135</oneClusterErr>
+			<twoClusterErr>0.2</twoClusterErr>
+			<threeClusterErr>0.333333333</threeClusterErr>
+			<fourClusterErr>0.5</fourClusterErr>
+			<fiveClusterErr>1.0</fiveClusterErr>
+		</driver>
+		
+		<!-- Driver to create helical track hits from clusters -->
+		<driver name="HelicalTrackHitDriver"
+		        type="org.lcsim.fit.helicaltrack.HelicalTrackHitDriver">
+			<digiCollectionNames>VXD_TrackerHits TKR_TrackerHits</digiCollectionNames>
+			<outputCollectionName>HelicalTrackHits</outputCollectionName>
+		</driver>
+		
+	    <!-- Remove additional hits in overlapping tracking modules -->
+		<driver name="TrackHitRemover"
+			    type="org.lcsim.recon.cheater.RemoveMultipleHelicalTrackHitsCheater">
+		</driver>
+		
+		<!-- Track reconstruction-->
+		<driver name="SeedTracker"
+			    type="org.lcsim.recon.tracking.seedtracker.steeringwrappers.SeedTrackerWrapper">
+			<strategyFile>${trackingStrategies}</strategyFile>
+		</driver>
+		
+		<!-- Calculate track states required for Pandora -->
+		<driver name="TrackStateDriver"
+			    type="org.lcsim.recon.tracking.seedtracker.SeedTrackerTrackStateDriver">
+	    </driver>
+	    
+	    <!-- Calculate the number of track hits in each subdetector required for LCFI -->
+	    <driver name="TrackSubdetectorHitNumbers"
+	            type="org.lcsim.recon.util.TrackSubdetectorHitNumbersDriver">
+	    </driver>
+	    
+		<!-- Write output slcio file -->
+		<driver name="Writer"
+		        type="org.lcsim.util.loop.LCIODriver">
+			<outputFilePath>${outputFile}</outputFilePath>
+			<ignoreCollection>MCParticleEndPointEnergy</ignoreCollection>
+		</driver>
+	</drivers>
+</lcsim>

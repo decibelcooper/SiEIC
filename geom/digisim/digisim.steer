@@ -1,0 +1,188 @@
+############################################
+#
+#  Example DigiSim steering file for Marlin
+#
+############################################
+
+.begin Global  ---------------------------------------
+
+# specify one ore more input files (in one ore more lines)
+
+LCIOInputFiles inputfile
+#LCIOInputFiles ../simjob.slcio ../simjob.slcio
+
+# the active processors that are called in the given order
+ActiveProcessors CalHitMapProcessor
+ActiveProcessors EcalBarrelDigitizer
+ActiveProcessors EcalEndcapDigitizer
+ActiveProcessors HcalBarrelDigitizer
+ActiveProcessors HcalEndcapDigitizer
+ActiveProcessors MuonBarrelDigitizer
+ActiveProcessors MuonEndcapDigitizer
+ActiveProcessors OutputProcessor
+
+# limit the number of processed records (run+evt):
+MaxRecordNumber 501
+.end Global  -----------------------------------------------
+###########################################################
+
+#define the processor parameters after '.begin ProcessorName' :
+
+# the default output processor
+.begin OutputProcessor
+
+# mandatory processor type (the name of the class)
+ProcessorType LCIOOutputProcessor
+
+# the outputfile
+LCIOOutputFile marlin.slcio
+
+# lcio write mode, new overwrites existing files
+# append appends to existing files
+# if nothing specified create new file only if it doesn't exist
+LCIOWriteMode WRITE_NEW
+#LCIOWriteMode WRITE_APPEND
+
+.end -------------------------------------------------
+############################################################
+# Utility processor.  It fills hit maps for use by other processors,
+#  so they don't need to fill the same maps themselves
+
+.begin CalHitMapProcessor
+
+ProcessorType CalHitMapProcessor
+
+.end -------------------------------------------------
+############################################################
+# Cal digitizer processor.  Instantiates one or more calorimeter hit
+#  "modifiers", which together represent the full digitization process.
+
+.begin EcalBarrelDigitizer
+
+ProcessorType DigiSimProcessor
+
+InputCollection        EcalBarrelHits
+OutputCollection       EcalBarrelRawHits
+Raw2SimLinksCollection EcalBarrelRaw2sim
+
+ModifierNames   EMBEnergyCut EMBTimeCut EMBEneDigi EMBTimeDigi
+
+# modifierName     Type                 Parameters (floats)
+
+# MIP is 92 keV, MIP/4 cut at 23e-6 GeV
+EMBEnergyCut       GainDiscrimination           1       0    23e-6    0
+EMBTimeCut         TimeDiscrimination         100       0
+
+# Digitization: multiply by large numbers to minimize round-off errors
+EMBEneDigi         SmearedGain          100000000       0
+EMBTimeDigi        SmearedTiming          1000000       0
+
+.end -------------------------------------------------
+############################################################
+# Cal digitizer processor.  Instantiates one or more calorimeter hit
+#  "modifiers", which together represent the full digitization process.
+
+.begin EcalEndcapDigitizer
+
+ProcessorType DigiSimProcessor
+
+InputCollection  EcalEndcapHits
+OutputCollection EcalEndcapRawHits
+Raw2SimLinksCollection EcalEndcapRaw2sim
+
+ModifierNames    EMECEnergyCut EMECTimeCut EMECEneDigi EMECTimeDigi
+
+# modifierName     Type                 Parameters (floats)
+# MIP is 92 keV, MIP/4 cut at 23e-6 GeV
+EMECEnergyCut      GainDiscrimination           1       0     23e-6      0
+EMECTimeCut        TimeDiscrimination         100       0
+
+# Digitization: multiply by large numbers to minimize round-off errors
+EMECEneDigi        SmearedGain          100000000       0
+EMECTimeDigi       SmearedTiming          1000000       0
+
+.end -------------------------------------------------
+############################################################
+# Cal digitizer processor.  Instantiates one or more calorimeter hit
+#  "modifiers", which together represent the full digitization process.
+
+.begin HcalBarrelDigitizer
+
+ProcessorType DigiSimProcessor
+
+InputCollection        HcalBarrelHits
+OutputCollection       HcalBarrelRawHits
+Raw2SimLinksCollection HcalBarrelRaw2sim
+
+ModifierNames     HBTimeCut HBEneDigi HBTimeDigi
+
+# modifierName     Type                 Parameters (floats)
+HBTimeCut         TimeDiscrimination         100       0
+HBEneDigi         SmearedGain          100000000       0
+HBTimeDigi        SmearedTiming          1000000       0
+
+.end -------------------------------------------------
+############################################################
+# Cal digitizer processor.  Instantiates one or more calorimeter hit
+#  "modifiers", which together represent the full digitization process.
+
+.begin HcalEndcapDigitizer
+
+ProcessorType DigiSimProcessor
+
+InputCollection        HcalEndcapHits
+OutputCollection       HcalEndcapRawHits
+Raw2SimLinksCollection HcalEndcapRaw2sim
+
+ModifierNames    HECTimeCut HECEneDigi HECTimeDigi
+
+# modifierName     Type                 Parameters (floats)
+HECTimeCut         TimeDiscrimination         100       0
+
+# Digitization: multiply by large numbers to minimize round-off errors
+HECEneDigi         SmearedGain          100000000       0
+HECTimeDigi        SmearedTiming          1000000       0
+
+.end -------------------------------------------------
+############################################################
+# Cal digitizer processor.  Instantiates one or more calorimeter hit
+#  "modifiers", which together represent the full digitization process.
+
+.begin MuonBarrelDigitizer
+
+ProcessorType DigiSimProcessor
+
+InputCollection        MuonBarrelHits
+OutputCollection       MuonBarrelRawHits
+Raw2SimLinksCollection MuonBarrelRaw2sim
+
+ModifierNames     MBTimeCut MBEneDigi MBTimeDigi
+
+# modifierName     Type                 Parameters (floats)
+MBTimeCut         TimeDiscrimination         100       0
+MBEneDigi         SmearedGain          100000000       0
+MBTimeDigi        SmearedTiming          1000000       0
+
+.end -------------------------------------------------
+############################################################
+# Cal digitizer processor.  Instantiates one or more calorimeter hit
+#  "modifiers", which together represent the full digitization process.
+
+.begin MuonEndcapDigitizer
+
+ProcessorType DigiSimProcessor
+
+InputCollection        MuonEndcapHits
+OutputCollection       MuonEndcapRawHits
+Raw2SimLinksCollection MuonEndcapRaw2sim
+
+ModifierNames    MECTimeCut MECEneDigi MECTimeDigi
+
+# modifierName     Type                 Parameters (floats)
+MECTimeCut         TimeDiscrimination         100       0
+
+# Digitization: multiply by large numbers to minimize round-off errors
+MECEneDigi         SmearedGain          100000000       0
+MECTimeDigi        SmearedTiming          1000000       0
+
+.end -------------------------------------------------

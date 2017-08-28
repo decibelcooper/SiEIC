@@ -1,0 +1,32 @@
+<lcsim xmlns:lcsim="http://www.lcsim.org/schemas/lcsim/1.0"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+    xs:noNamespaceSchemaLocation="http://www.lcsim.org/schemas/lcsim/1.0/lcsim.xsd">
+
+  <inputFiles>
+    <file>${trainingSampleFile}</file>
+  </inputFiles>
+
+  <control>
+    <numberOfEvents>-1</numberOfEvents>
+    <verbose>false</verbose>
+    <printDriverStatistics>true</printDriverStatistics>
+    <printDriversDetailed>true</printDriversDetailed>
+  </control>
+
+  <execute>
+    <driver name="StrategyBuilder"></driver>
+  </execute>
+
+  <drivers>
+    <driver name="StrategyBuilder" type="org.lcsim.recon.tracking.seedtracker.strategybuilder.StrategyBuilder">
+      <output type="String">${outputStrategyFile}</output>
+      <symmetrize type="boolean">true</symmetrize>
+      <layerWeight type="String">${layerWeightsFile}</layerWeight>
+      <strategyPrototype type="String">${prototypeStrategyFile}</strategyPrototype>
+      <minLayers type="int">5</minLayers>
+      <numConfirmLayers type="int">1</numConfirmLayers>
+      <numSeedLayers type="int">3</numSeedLayers>
+      <verbose type="boolean">true</verbose>
+    </driver>
+  </drivers>
+</lcsim>

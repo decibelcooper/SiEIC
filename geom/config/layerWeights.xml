@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LayerWeight xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+             xs:noNamespaceSchemaLocation="http://lcsim.org/recon/tracking/seedtracker/strategybuilder/layerweights.xsd">
+  <!--Based on layer weights for sid02.-->
+  <!--Default used for any not already defined-->
+  <DefaultReadoutEfficiency>1.0</DefaultReadoutEfficiency>
+
+  <ReadoutEfficiencies>
+    <ReadoutEfficiency readout="TkrBarrHits">1.</ReadoutEfficiency>
+    <ReadoutEfficiency readout="TkrEndcapHits">1.</ReadoutEfficiency>
+    <ReadoutEfficiency readout="VtxBarrHits">0.99</ReadoutEfficiency>
+    <ReadoutEfficiency readout="VtxEndcapHits">0.99</ReadoutEfficiency>
+    <ReadoutEfficiency readout="TkrForwardHits">0.99</ReadoutEfficiency>
+  </ReadoutEfficiencies>
+
+  <DefaultWeight>1.0</DefaultWeight>
+  <TargetDetector divide_by_two_in_tracker_endcap="false" divide_by_two_in_tracker_forward="false">sieic5</TargetDetector>
+  <AdjacenceMultiplier>0.5</AdjacenceMultiplier>
+
+  <Layers>
+    <!--Barrel-->
+    <Layer layer_number="5" detector_name="TrackerBarrel" be_flag="BARREL">2.01</Layer>
+    <Layer layer_number="4" detector_name="TrackerBarrel" be_flag="BARREL">2.02</Layer>
+    <Layer layer_number="3" detector_name="TrackerBarrel" be_flag="BARREL">2.03</Layer>
+    <Layer layer_number="2" detector_name="TrackerBarrel" be_flag="BARREL">2.04</Layer>
+    <Layer layer_number="1" detector_name="TrackerBarrel" be_flag="BARREL">2.05</Layer>
+    <Layer layer_number="5" detector_name="VertexBarrel" be_flag="BARREL">3.06</Layer>
+    <Layer layer_number="4" detector_name="VertexBarrel" be_flag="BARREL">3.07</Layer>
+    <Layer layer_number="3" detector_name="VertexBarrel" be_flag="BARREL">3.08</Layer>
+    <Layer layer_number="2" detector_name="VertexBarrel" be_flag="BARREL">0</Layer>
+    <Layer layer_number="1" detector_name="VertexBarrel" be_flag="BARREL">0</Layer>
+    <!--North Endcap-->
+    <Layer layer_number="4" detector_name="TrackerEndcap" be_flag="ENDCAP_NORTH">1.01</Layer>
+    <Layer layer_number="3" detector_name="TrackerEndcap" be_flag="ENDCAP_NORTH">1.02</Layer>
+    <Layer layer_number="2" detector_name="TrackerEndcap" be_flag="ENDCAP_NORTH">1.03</Layer>
+    <Layer layer_number="1" detector_name="TrackerEndcap" be_flag="ENDCAP_NORTH">1.04</Layer>
+    <Layer layer_number="3" detector_name="TrackerForward" be_flag="ENDCAP_NORTH">1.05</Layer>
+    <Layer layer_number="2" detector_name="TrackerForward" be_flag="ENDCAP_NORTH">1.06</Layer>
+    <Layer layer_number="1" detector_name="TrackerForward" be_flag="ENDCAP_NORTH">1.07</Layer>
+    <Layer layer_number="4" detector_name="VertexEndcap" be_flag="ENDCAP_NORTH">2.08</Layer>
+    <Layer layer_number="3" detector_name="VertexEndcap" be_flag="ENDCAP_NORTH">2.09</Layer>
+    <Layer layer_number="2" detector_name="VertexEndcap" be_flag="ENDCAP_NORTH">2.10</Layer>
+    <Layer layer_number="1" detector_name="VertexEndcap" be_flag="ENDCAP_NORTH">2.11</Layer>
+    <!--South Endcap-->
+    <Layer layer_number="4" detector_name="TrackerEndcap" be_flag="ENDCAP_SOUTH">1.01</Layer>
+    <Layer layer_number="3" detector_name="TrackerEndcap" be_flag="ENDCAP_SOUTH">1.02</Layer>
+    <Layer layer_number="2" detector_name="TrackerEndcap" be_flag="ENDCAP_SOUTH">1.03</Layer>
+    <Layer layer_number="1" detector_name="TrackerEndcap" be_flag="ENDCAP_SOUTH">1.04</Layer>
+    <Layer layer_number="3" detector_name="TrackerForward" be_flag="ENDCAP_SOUTH">1.05</Layer>
+    <Layer layer_number="2" detector_name="TrackerForward" be_flag="ENDCAP_SOUTH">1.06</Layer>
+    <Layer layer_number="1" detector_name="TrackerForward" be_flag="ENDCAP_SOUTH">1.07</Layer>
+    <Layer layer_number="4" detector_name="VertexEndcap" be_flag="ENDCAP_SOUTH">2.08</Layer>
+    <Layer layer_number="3" detector_name="VertexEndcap" be_flag="ENDCAP_SOUTH">2.09</Layer>
+    <Layer layer_number="2" detector_name="VertexEndcap" be_flag="ENDCAP_SOUTH">2.10</Layer>
+    <Layer layer_number="1" detector_name="VertexEndcap" be_flag="ENDCAP_SOUTH">2.11</Layer>
+  </Layers>
+</LayerWeight>
