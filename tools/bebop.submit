@@ -3,17 +3,23 @@
 #SBATCH -N 14
 #SBATCH --time=1:00:00
 
-singularityImage="../fpadsim-v1.4.img"
-files=$(find input -iname "*.promc")
+dockerImage="argonneeic/fpadsim:v1.4"
+singularityImage="fpadsim-v1.4.img"
+
+# Configure above this line
 
 node=0
 function runTaskOnNode {
-	srun -lN1 -r$node singularity exec $singularityImage bash -lc "make -j$(($SLURM_CPUS_ON_NODE + 1)) $1" &
+	srun -N 1 -r $node singularity exec $singularityImage bash -lc "make -j$(($SLURM_CPUS_ON_NODE + 1)) $1" &
 	node=$(($node + 1))
 }
 
-module load singularity
+files=$(find input -iname "*.promc")
 
+module load singularity
+if [ ! -f $singularityImage ]; then
+	singularity pull --name "$singularityImage" docker://$dockerImage
+fi
 singularity exec $singularityImage bash -lc "make -j4 init"
 
 i=0

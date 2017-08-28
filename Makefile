@@ -93,7 +93,7 @@ $(GEOM_PANDORA): $(GEOM_PATH)/compact.xml $$(LCSIM_CONDITIONS)
 
 $(PWD)/.lcsim/cache/$(LCSIM_CONDITIONS_PREFIX_ESCAPED)%.zip: $(GEOM_HEPREP)
 	mkdir -p $(@D)
-	cd geom/$* && zip -r $@ * &> $@.log
+	cd $(GEOM_PATH) && zip -r $@ * &> $@.log
 
 $(GEOM_OVERLAP_CHECK): $(GEOM_GDML) tools/overlapCheck.cpp
 	root -b -q -l "tools/overlapCheck.cpp(\"$<\");" | tee $@
