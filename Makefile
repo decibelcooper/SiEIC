@@ -3,7 +3,7 @@
 
 # Define geometry target paths
 # FIXME: move GEOM_BASE definition outside of Makefile
-GEOM_BASE = sieic5
+GEOM_BASE = sieic6
 GEOM_PATH = geom
 GEOM_LCDD = $(GEOM_PATH)/$(GEOM_BASE).lcdd
 GEOM_HEPREP = $(GEOM_PATH)/$(GEOM_BASE).heprep
@@ -18,7 +18,7 @@ GEOM = $(GEOM_LCDD) $(GEOM_GDML) $(GEOM_HEPREP) $(GEOM_PANDORA) $(GEOM_HTML) $(L
 	$(GEOM_OVERLAP_CHECK)
 
 # Define tracking strategy list target path
-STRATEGIES = $(GEOM_PATH)/config/$(GEOM_BASE)_trackingStrategies.xml
+STRATEGIES = $(GEOM_PATH)/config/trackingStrategies.xml
 
 # Grab number of events to simulate
 N_EVENTS = $(shell cat nEventsPerRun)
@@ -146,11 +146,11 @@ output/%_tracking.slcio: output/%.slcio $(STRATEGIES) \
 		&> $@.log
 
 # Pandora PFA with slicPandora
-output/%_pandora.slcio: output/%_tracking.slcio $(GEOM_PANDORA) $(GEOM_PATH)/config/PandoraSettings_$(GEOM_BASE).xml
+output/%_pandora.slcio: output/%_tracking.slcio $(GEOM_PANDORA) $(GEOM_PATH)/config/PandoraSettings.xml
 	$(slicPandora_DIR)/bin/PandoraFrontend \
 		-g $(GEOM_PANDORA) \
 		-i $< \
-		-c $(GEOM_PATH)/config/PandoraSettings_$(GEOM_BASE).xml \
+		-c $(GEOM_PATH)/config/PandoraSettings.xml \
 		-o $@ \
 		&> $@.log
 

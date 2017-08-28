@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lccdd xmlns:compact="http://atlaswww.hep.anl.gov/hepsim/lcsim/org/schemas/compact/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="http://atlaswww.hep.anl.gov/hepsim/lcsim/org/schemas/compact/1.0/compact.xsd">
-    <info name="sieic5" title="Silicon Detector LOI for EIC" author="Sergei Chekanov, Mohammad Hattawy, Whitney R. Armstrong, Jose Repond, David Blyth" url="http://atlaswww.hep.anl.gov/hepsim/soft/detectors/" status="development" version="$Id: compact.xml,v 2.2 2016/11/17 23:46:56 S.Chekanov Exp $">
+    <info name="sieic6" title="Silicon Detector LOI for EIC" author="Sergei Chekanov, Mohammad Hattawy, Whitney R. Armstrong, Jose Repond, David Blyth" url="http://atlaswww.hep.anl.gov/hepsim/soft/detectors/" status="development" version="$Id: compact.xml,v 2.2 2016/11/17 23:46:56 S.Chekanov Exp $">
         <comment>
             The compact format for the Silicon Detector for EIC. Based on as
             SiD LOI 090204. Solenoid field is 2.5 T (with return -0.3). HCAL is

@@ -14,7 +14,7 @@
   </ReadoutEfficiencies>
 
   <DefaultWeight>1.0</DefaultWeight>
-  <TargetDetector divide_by_two_in_tracker_endcap="false" divide_by_two_in_tracker_forward="false">sieic5</TargetDetector>
+  <TargetDetector divide_by_two_in_tracker_endcap="false" divide_by_two_in_tracker_forward="false">sieic6</TargetDetector>
   <AdjacenceMultiplier>0.5</AdjacenceMultiplier>
 
   <Layers>
