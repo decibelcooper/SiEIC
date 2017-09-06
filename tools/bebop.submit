@@ -1,12 +1,9 @@
 #!/bin/bash
 #SBATCH -p bdwall
-#SBATCH -N 14
-#SBATCH --time=1:00:00
+#SBATCH -N 8
+#SBATCH --time=4:00:00
 
-dockerImage="argonneeic/fpadsim:v1.4"
-singularityImage="fpadsim-v1.4.img"
-
-# Configure above this line
+singularityImage=$1
 
 node=0
 function runTaskOnNode {
@@ -15,12 +12,6 @@ function runTaskOnNode {
 }
 
 files=$(find input -iname "*.promc")
-
-module load singularity
-if [ ! -f $singularityImage ]; then
-	singularity pull --name "$singularityImage" docker://$dockerImage
-fi
-singularity exec $singularityImage bash -lc "make -j4 init"
 
 i=0
 for file in $files; do

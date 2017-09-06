@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd $(dirname $0)/../
+
+dockerImage="argonneeic/fpadsim:v1.4"
+singularityImage="fpadsim-v1.4.img"
+
+module load singularity
+if [ ! -f $singularityImage ]; then
+	singularity pull --name "$singularityImage" docker://$dockerImage
+fi
+singularity exec $singularityImage bash -lc "make -j4 init"
+
+sbatch tools/bebop.submit $singularityImage
