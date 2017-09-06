@@ -1,6 +1,12 @@
 # Require second expansion for tricksy $$() substitutions
 .SECONDEXPANSION:
 
+# Define required environment variable and value.  This is intended for use in
+# a container which has a variable for identifying the version.  The variable
+# value is checked when running the hepsim target.
+ENV_VAR=FPADSIM_VERSION
+ENV_VAR_VAL=1.4
+
 # Define geometry target paths
 # FIXME: move GEOM_BASE definition outside of Makefile
 GEOM_BASE = sieic6
@@ -54,13 +60,13 @@ endif
 
 .PHONY: all init hepsim sim clean allclean
 
-all: $(OUTPUT) $(GEOM) $(STRATEGIES)
+all: env $(OUTPUT) $(GEOM) $(STRATEGIES)
 
-init: $(GEOM) $(STRATEGIES)
+init: env $(GEOM) $(STRATEGIES)
 
-hepsim: $(OUTPUT_HEPSIM)
+hepsim: env $(OUTPUT_HEPSIM)
 
-sim: $(OUTPUT_SIM)
+sim: env $(OUTPUT_SIM)
 
 clean:
 	rm -rf output/*
@@ -70,6 +76,16 @@ allclean:
 
 JAVA_OPTS = -Xms1024m -Xmx1024m
 CONDITIONS_OPTS=-Dorg.lcsim.cacheDir=$(PWD) -Duser.home=$(PWD)
+
+##### Define environment-checking target
+
+env:
+ifndef $(ENV_VAR)
+	$(error $(ENV_VAR) is not set.  Make sure you are running in the correct environment)
+endif
+ifneq ($($(ENV_VAR)),$(ENV_VAR_VAL))
+	$(error $(ENV_VAR) is $($(ENV_VAR)), required value is $(ENV_VAR_VAL))
+endif
 
 ##### Define geometry targets
 
@@ -101,7 +117,8 @@ $(GEOM_OVERLAP_CHECK): $(GEOM_GDML) tools/overlapCheck.cpp
 ##### Define tracking strategy list target
 
 $(STRATEGIES): $(GEOM_PATH)/compact.xml $(GEOM_PATH)/config/prototypeStrategy.xml \
-			$(GEOM_PATH)/config/layerWeights.xml $$(LCSIM_CONDITIONS)
+			$(GEOM_PATH)/config/layerWeights.xml $(GEOM_PATH)/config/strategyBuilder.xml \
+			$$(LCSIM_CONDITIONS)
 	if [ -f $(GEOM_PATH)/config/trainingSample.slcio ]; \
 		then java $(JAVA_OPTS) $(CONDITIONS_OPTS) \
 			-jar $(CLICSOFT)/distribution/target/lcsim-distribution-*-bin.jar \
