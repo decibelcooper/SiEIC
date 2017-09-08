@@ -45,7 +45,7 @@ The main tool specific to Bebop is `tools/bebop.submit`.  This is a shell script
 
 Once the input files are acquired, and `tools/bebop.submit` and `nEventsPerRun` have been configured, one may run a batch job on Bebop with the command...
 ```shell
-sbatch tools/bebop
+./tools/bebop
 ```
 
 Please note that the `tools/bebop.submit` script assumes a particular path for the singularity image.  If it does not exist, it will create an image from the docker hub.  If you have already created an image for using `hs-get` for example, consider placing the image in the location that the script will look for one, in order to avoid creating duplicate images.
