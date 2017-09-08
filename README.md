@@ -7,8 +7,8 @@ sure you have Singularity 2.3 or above installed to get started.  Also, make
 sure you are in a directory with at least 6GB of space available.
 
 ```
-singularity pull docker://argonneeic/fpadsim
-singularity exec fpadsim.img bash -l
+singularity pull docker://argonneeic/fpadsim:v1.4
+singularity exec fpadsim-v1.4.img bash -l
 ```
 
 ### Executing a workflow
