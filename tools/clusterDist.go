@@ -11,10 +11,11 @@ import (
 	"path"
 	"time"
 
-	"github.com/gonum/plot/vg"
 	"go-hep.org/x/hep/hbook"
 	"go-hep.org/x/hep/hplot"
 	"go-hep.org/x/hep/lcio"
+
+	"gonum.org/v1/plot/vg"
 )
 
 var (
