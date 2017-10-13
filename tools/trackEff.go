@@ -52,10 +52,7 @@ options:
 
 	flag.Parse()
 
-	p, err := hplot.New()
-	if err != nil {
-		panic(err)
-	}
+	p := hplot.New()
 
 	p.Title.Text = "Tracking/Truth Comparison"
 	if *normalize {
@@ -173,10 +170,7 @@ func drawFileSet(inputFiles []string, p *hplot.Plot, drawTruth bool, trackColor 
 	}
 
 	if *doMinAnglePlot {
-		h, err := hplot.NewH1D(minAngleHist)
-		if err != nil {
-			panic(err)
-		}
+		h := hplot.NewH1D(minAngleHist)
 		h.LineStyle.Color = trackColor
 		h.LineStyle.Dashes = trackDashes
 		h.LineStyle.DashOffs = trackDashOffs
@@ -186,15 +180,11 @@ func drawFileSet(inputFiles []string, p *hplot.Plot, drawTruth bool, trackColor 
 		}
 	} else {
 		var hTrue *hplot.H1D
-		var err error
 		if drawTruth {
 			if !*vsP_T {
-				hTrue, err = hplot.NewH1D(trueEtaHist)
+				hTrue = hplot.NewH1D(trueEtaHist)
 			} else {
-				hTrue, err = hplot.NewH1D(trueP_THist)
-			}
-			if err != nil {
-				panic(err)
+				hTrue = hplot.NewH1D(trueP_THist)
 			}
 			hTrue.LineStyle.Color = color.RGBA{B: 255, A: 255}
 			if !*normalize {
@@ -205,12 +195,9 @@ func drawFileSet(inputFiles []string, p *hplot.Plot, drawTruth bool, trackColor 
 
 		var hTrack *hplot.H1D
 		if !*vsP_T {
-			hTrack, err = hplot.NewH1D(trackEtaHist)
+			hTrack = hplot.NewH1D(trackEtaHist)
 		} else {
-			hTrack, err = hplot.NewH1D(trackP_THist)
-		}
-		if err != nil {
-			panic(err)
+			hTrack = hplot.NewH1D(trackP_THist)
 		}
 		hTrack.LineStyle.Color = trackColor
 		hTrack.LineStyle.Dashes = trackDashes
@@ -233,10 +220,7 @@ func drawFileSet(inputFiles []string, p *hplot.Plot, drawTruth bool, trackColor 
 				}
 			}
 
-			hNorm, err := hplot.NewH1D(normHist)
-			if err != nil {
-				panic(err)
-			}
+			hNorm := hplot.NewH1D(normHist)
 			hNorm.LineStyle.Color = trackColor
 			hNorm.LineStyle.Dashes = trackDashes
 			hNorm.LineStyle.DashOffs = trackDashOffs

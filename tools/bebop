@@ -2,8 +2,8 @@
 
 cd $(dirname $0)/../
 
-dockerImage="argonneeic/fpadsim:v1.4"
-singularityImage="fpadsim-v1.4.img"
+dockerImage="argonneeic/fpadsim:v1.4.1"
+singularityImage="fpadsim-v1.4.1.img"
 
 module load singularity
 if [ ! -f $singularityImage ]; then

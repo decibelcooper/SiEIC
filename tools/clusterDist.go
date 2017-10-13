@@ -48,10 +48,7 @@ options:
 
 	flag.Parse()
 
-	p, err := hplot.New()
-	if err != nil {
-		panic(err)
-	}
+	p := hplot.New()
 
 	p.Title.Text = "Cluster Distribution"
 	p.Title.Padding = 2 * vg.Millimeter
@@ -138,10 +135,7 @@ func drawFileSet(inputFiles []string, p *hplot.Plot, histColor color.Color, hist
 		}
 	}
 
-	hCluster, err := hplot.NewH1D(clusterEtaHist)
-	if err != nil {
-		panic(err)
-	}
+	hCluster := hplot.NewH1D(clusterEtaHist)
 	hCluster.LineStyle.Color = histColor
 	hCluster.LineStyle.Dashes = histDashes
 	hCluster.LineStyle.DashOffs = histDashOffs

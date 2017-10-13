@@ -61,10 +61,7 @@ options:
 
 	flag.Parse()
 
-	p, err := hplot.New()
-	if err != nil {
-		panic(err)
-	}
+	p := hplot.New()
 	p.Title.Text = "PFO/Truth Comparison"
 	p.Title.Padding = 2 * vg.Millimeter
 	p.X.Label.Text = "eta"
@@ -169,38 +166,26 @@ func drawFileSet(inputFiles []string, p *hplot.Plot, drawTruth bool, histRedTint
 	}
 
 	/*
-		hElecTrue, err := hplot.NewH1D(elecTrueEtaHist)
-		if err != nil {
-			panic(err)
-		}
+		hElecTrue := hplot.NewH1D(elecTrueEtaHist)
 		hElecTrue.LineStyle.Color = color.RGBA{R: 255, A: 255, G: 150, B: 150}
 		hElecTrue.FillColor = nil
 		p.Add(hElecTrue)
 
-		hElecPFO, err := hplot.NewH1D(elecPFOEtaHist)
-		if err != nil {
-			panic(err)
-		}
+		hElecPFO := hplot.NewH1D(elecPFOEtaHist)
 		hElecPFO.LineStyle.Color = color.RGBA{R: 255, A: 255}
 		hElecPFO.FillColor = nil
 		p.Add(hElecPFO)
 	*/
 
 	if drawTruth {
-		hChargedTrue, err := hplot.NewH1D(chargedTrueEtaHist)
-		if err != nil {
-			panic(err)
-		}
+		hChargedTrue := hplot.NewH1D(chargedTrueEtaHist)
 		hChargedTrue.LineStyle.Color = color.RGBA{B: 255, A: 255, R: 150, G: 150}
 		hChargedTrue.FillColor = nil
 		p.Add(hChargedTrue)
 		p.Legend.Add("MCParticle Charged", hChargedTrue)
 	}
 
-	hChargedPFO, err := hplot.NewH1D(chargedPFOEtaHist)
-	if err != nil {
-		panic(err)
-	}
+	hChargedPFO := hplot.NewH1D(chargedPFOEtaHist)
 	hChargedPFO.LineStyle.Color = color.RGBA{B: 255, A: 255, R: histRedTint}
 	hChargedPFO.LineStyle.Dashes = histDashes
 	hChargedPFO.LineStyle.DashOffs = histDashOffs
@@ -209,20 +194,14 @@ func drawFileSet(inputFiles []string, p *hplot.Plot, drawTruth bool, histRedTint
 	p.Legend.Add(histLabelPrefix+" Charged", hChargedPFO)
 
 	if drawTruth {
-		hNeutralTrue, err := hplot.NewH1D(neutralTrueEtaHist)
-		if err != nil {
-			panic(err)
-		}
+		hNeutralTrue := hplot.NewH1D(neutralTrueEtaHist)
 		hNeutralTrue.LineStyle.Color = color.RGBA{G: 255, A: 255, R: 150, B: 150}
 		hNeutralTrue.FillColor = nil
 		p.Add(hNeutralTrue)
 		p.Legend.Add("MCParticle Neutral", hNeutralTrue)
 	}
 
-	hNeutralPFO, err := hplot.NewH1D(neutralPFOEtaHist)
-	if err != nil {
-		panic(err)
-	}
+	hNeutralPFO := hplot.NewH1D(neutralPFOEtaHist)
 	hNeutralPFO.LineStyle.Color = color.RGBA{G: 255, A: 255, R: histRedTint}
 	hNeutralPFO.LineStyle.Dashes = histDashes
 	hNeutralPFO.LineStyle.DashOffs = histDashOffs

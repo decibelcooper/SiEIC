@@ -5,7 +5,7 @@
 # a container which has a variable for identifying the version.  The variable
 # value is checked when running the hepsim target.
 ENV_VAR=FPADSIM_VERSION
-ENV_VAR_VAL=1.4
+ENV_VAR_VAL=1.4.1
 
 # Define geometry target paths
 # FIXME: move GEOM_BASE definition outside of Makefile
