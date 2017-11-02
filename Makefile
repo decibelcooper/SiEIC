@@ -30,6 +30,7 @@ OUTPUT_DIRS = $(sort $(dir $(patsubst input/%,output/%,$(basename $(shell find i
 OUTPUT_TRUTH = $(addprefix output/,$(INPUT_BASE:=_truth.slcio))
 OUTPUT_SIM = $(addprefix output/,$(INPUT_BASE:=.slcio))
 OUTPUT_TRACKING = $(addprefix output/,$(INPUT_BASE:=_tracking.slcio))
+OUTPUT_TRACKING_PROIO = $(addprefix output/,$(INPUT_BASE:=_tracking.proio.gz))
 OUTPUT_PANDORA = $(addprefix output/,$(INPUT_BASE:=_pandora.slcio))
 OUTPUT_HEPSIM = $(addprefix output/,$(INPUT_BASE:=_hepsim.slcio))
 
@@ -46,8 +47,7 @@ OUTPUT_DIAG = $(OUTPUT_TRACKEFF_DEVANG) $(OUTPUT_TRACKEFF) $(OUTPUT_TRACKEFF_NOR
 			  $(OUTPUT_PFODIST)
 
 # Set what output files to build by default
-OUTPUT = $(OUTPUT_TRUTH) $(OUTPUT_SIM) $(OUTPUT_TRACKING) $(OUTPUT_PANDORA) $(OUTPUT_HEPSIM) \
-	    $(OUTPUT_DIAG)
+OUTPUT = $(OUTPUT_TRUTH) $(OUTPUT_SIM) $(OUTPUT_TRACKING) $(OUTPUT_TRACKING_PROIO)
 ifeq ($(MAKECMDGOALS),hepsim)
 .INTERMEDIATE: $(OUTPUT_TRUTH) $(OUTPUT_SIM) $(OUTPUT_TRACKING) $(OUTPUT_PANDORA)
 endif
@@ -65,6 +65,9 @@ sim: $(OUTPUT_SIM)
 clean:
 	rm -rf output/*
 
+initclean:
+	rm -rf $(GEOM) $(STRATEGIES)
+
 allclean:
 	rm -rf output/* $(GEOM) $(dir $(LCSIM_CONDITIONS))
 
@@ -73,14 +76,14 @@ CONDITIONS_OPTS=-Dorg.lcsim.cacheDir=$(PWD) -Duser.home=$(PWD)
 
 ##### Define geometry targets
 
-$(GEOM_PATH)/compact.xml: $(GEOM_PATH)/compact_dd4hep.xml
-	cat $< | sed 's/<includes>.*<\/includes>//;s/type="solenoid"/type="Solenoid"/;s/\<T\>/1/g' > $@
+$(GEOM_PATH)/compact.xml: $(GEOM_PATH)/dd4hep.xml
+	cat $< | sed 's/<includes>.*<\/includes>//;s/type="solenoid"/type="Solenoid"/;s/\<tesla\>/1/g' > $@
 
 $(GEOM_LCDD): $(GEOM_PATH)/compact.xml
 	java $(JAVA_OPTS) $(CONDITIONS_OPTS) -jar $(GCONVERTER) -o lcdd $< $@
 
-$(GEOM_GDML): $(GEOM_LCDD)
-	slic -g $< -G $@ > $@.log
+$(GEOM_GDML): $(GEOM_PATH)/dd4hep.xml
+	geoConverter -compact2gdml -input $< -output $@ &> $@.log
 
 $(GEOM_HEPREP): $(GEOM_PATH)/compact.xml
 	java $(JAVA_OPTS) $(CONDITIONS_OPTS) -jar $(GCONVERTER) -o heprep $< $@
@@ -91,7 +94,7 @@ $(GEOM_PANDORA): $(GEOM_PATH)/compact.xml $$(LCSIM_CONDITIONS)
 %.html: $(GEOM_PATH)/compact.xml $$(LCSIM_CONDITIONS)
 	java $(JAVA_OPTS) $(CONDITIONS_OPTS) -jar $(GCONVERTER) -o html $< $@
 
-$(PWD)/.lcsim/cache/$(LCSIM_CONDITIONS_PREFIX_ESCAPED)%.zip: $(GEOM_HEPREP)
+$(PWD)/.lcsim/cache/$(LCSIM_CONDITIONS_PREFIX_ESCAPED)%.zip: $(GEOM_HEPREP) $(GEOM_LCDD)
 	mkdir -p $(@D)
 	cd $(GEOM_PATH) && zip -r $@ * &> $@.log
 
@@ -101,7 +104,8 @@ $(GEOM_OVERLAP_CHECK): $(GEOM_GDML) tools/overlapCheck.cpp
 ##### Define tracking strategy list target
 
 $(STRATEGIES): $(GEOM_PATH)/compact.xml $(GEOM_PATH)/config/prototypeStrategy.xml \
-			$(GEOM_PATH)/config/layerWeights.xml $$(LCSIM_CONDITIONS)
+			$(GEOM_PATH)/config/layerWeights.xml $(GEOM_PATH)/config/strategyBuilder.xml \
+			$$(LCSIM_CONDITIONS)
 	if [ -f $(GEOM_PATH)/config/trainingSample.slcio ]; \
 		then java $(JAVA_OPTS) $(CONDITIONS_OPTS) \
 			-jar $(CLICSOFT)/distribution/target/lcsim-distribution-*-bin.jar \
@@ -123,15 +127,16 @@ output/%_truth.slcio: input/%.promc
 	java $(JAVA_OPTS) promc2lcio $(abspath $<) $(abspath $@) \
 		&> $@.log
 
-# SLIC simulation of truth events
-output/%.slcio: output/%_truth.slcio $(GEOM_LCDD) $(GEOM_PATH)/config/defaultILCCrossingAngle.mac \
-				nEventsPerRun
-	time bash -c "time slic -x -i $< \
-	    -g $(GEOM_LCDD) \
-	    -m $(GEOM_PATH)/config/defaultILCCrossingAngle.mac \
-	    -o $@ \
-	    -r $(N_EVENTS)" \
-	    &> $@.log
+# DDSim simulation of truth events
+output/%.slcio: output/%_truth.slcio $(GEOM_PATH)/dd4hep.xml nEventsPerRun $(GEOM_PATH)/config/ddsim-steering.py
+	time bash -c "time ddsim \
+		--runType batch \
+		--inputFiles $< \
+		--steeringFile $(GEOM_PATH)/config/ddsim-steering.py \
+		--compactFile $(GEOM_PATH)/dd4hep.xml \
+		--numberOfEvents $(N_EVENTS) \
+		--outputFile $@" \
+		&> $@.log
 
 # Digitization AND tracking with LCSim
 output/%_tracking.slcio: output/%.slcio $(STRATEGIES) \
@@ -145,20 +150,9 @@ output/%_tracking.slcio: output/%.slcio $(STRATEGIES) \
 		$(GEOM_PATH)/config/sid_dbd_prePandora_noOverlay.xml" \
 		&> $@.log
 
-# Pandora PFA with slicPandora
-output/%_pandora.slcio: output/%_tracking.slcio $(GEOM_PANDORA) $(GEOM_PATH)/config/PandoraSettings.xml
-	$(slicPandora_DIR)/bin/PandoraFrontend \
-		-g $(GEOM_PANDORA) \
-		-i $< \
-		-c $(GEOM_PATH)/config/PandoraSettings.xml \
-		-o $@ \
-		&> $@.log
-
-# Trimming of slicPandora output
-output/%_hepsim.slcio: output/%_pandora.slcio output/%_truth.slcio
-	rm -f $@
-	$(FPADSIM)/lcio2hepsim/lcio2hepsim $^ $@ \
-		&> $@.log
+# Convert tracking to proio
+output/%_tracking.proio.gz: output/%_tracking.slcio
+	lcio2proio -o $@ $<
 
 ##### Analysis target definitions
 
